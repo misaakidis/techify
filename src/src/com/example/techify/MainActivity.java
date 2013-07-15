@@ -21,14 +21,6 @@ public class MainActivity extends Activity {
 		ActivityUtils.initialize(this);
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if(!ActivityUtils.isNetworkAvailable())
-			ActivityUtils.showMessageOK("No Internet Connection");
-
-	}
-
 	/*
 	 * The app will not be using the Menu button (which is now considered obsolete).
 	 * 

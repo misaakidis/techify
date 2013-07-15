@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-public class ActivityUtils{
+public class ActivityUtils {
 
 	private static Activity activity;
 	private static Context context;

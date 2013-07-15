@@ -30,6 +30,7 @@ class DBconn extends SQLiteOpenHelper {
 				+ "_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ "RSS_FEED_ID" + " INT, "
 				+ "TITLE" + " VARCHAR(127), "
+				+ "PUBDATE" + "CHAR(8), "
 				+ "DATA" + "BLOB, "
 				+ "FOREIGN KEY (RSS_FEED_ID) REFERENCES RSS_FEED(_ID)"
 				+ ");";

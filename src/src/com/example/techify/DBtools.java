@@ -39,7 +39,6 @@ class DBtools {
 	public static long insertArticle(Article article)
 	{
 		ContentValues values = new ContentValues();
-		values.put("_ID", article.get_id());
 		values.put("RSS_FEED_ID", article.getRss_feed_id());
 		values.put("TITLE",article.getTitle());
 		values.put("PUBDATE", article.getPubdateStr());

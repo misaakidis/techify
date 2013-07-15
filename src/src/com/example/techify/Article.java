@@ -1,9 +1,8 @@
 package com.example.techify;
 
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Article {
 	
@@ -13,7 +12,7 @@ public class Article {
 	private int rss_feed_id;
 	private String title;
 	private Date pubdate;
-	private Blob data;
+	private byte[] data;
 	
 	public int get_id()
 	{
@@ -45,7 +44,7 @@ public class Article {
 	}
 	
 	public String getPubdateStr() {
-		return new SimpleDateFormat("yyyyMMMMddddHHmmss").format(pubdate);
+		return new SimpleDateFormat("yyyyMMddHHmmss", Locale.US).format(pubdate);
 	}
 
 	public void setPubdate(Date pubdate) {
@@ -53,22 +52,11 @@ public class Article {
 	}
 
 	public byte[] getData() {
-		try {
-			return data.getBytes(1, (int) data.length());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return this.data.clone();
 	}
 
-	public void setData(Blob data) {
-		try {
-			this.data.setBytes(1, data.getBytes(1, (int) data.length()));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void setData(byte[] data) {
+		this.data = data.clone();
 	}
 
 }

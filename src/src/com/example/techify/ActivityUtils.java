@@ -20,6 +20,7 @@ public class ActivityUtils {
 	{
 		ActivityUtils.activity = MainActivity;
 		ActivityUtils.context = MainActivity.getApplicationContext();
+		context.deleteDatabase("techify.sqlite3");
 		DBtools.doConnect(ActivityUtils.context);
 	}
 	

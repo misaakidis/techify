@@ -15,6 +15,9 @@
 
 package com.example.techify;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+
 import android.os.Bundle;
 import android.app.Activity;
 import com.example.techify.ActivityUtils;
@@ -34,6 +37,23 @@ public class MainActivity extends Activity {
 		super.onStart();
 		//Initialize utility class with methods for interacting with GUI
 		ActivityUtils.initialize(this);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		Article test = new Article();
+		test.setRss_feed_id(1);
+		test.setPubdate(new Date());
+		test.setTitle("Test Article");
+		try {
+			test.setData("This is a simple article".getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DBtools.insertArticle(test);
 	}
 
 	/*

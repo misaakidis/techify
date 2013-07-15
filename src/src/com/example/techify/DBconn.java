@@ -25,22 +25,24 @@ class DBconn extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// Debug log that this is the first execution of the program and we create a new DB
 		Log.d("DB", "Creating new Database");
+		
+		// Enable Foreign Keys constraints
+		db.execSQL("PRAGMA foreign_keys=ON;");
 
 		// SQL to initialize the DB schema
 		String RSS_FEED_table = "CREATE TABLE RSS_FEED ("
 				+ "_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ "TITLE" + " VARCHAR(127), "
 				+ "LINK" + " VARCHAR(511) NOT NULL, "
-				+ "DESCRIPTION" + " VARCHAR(511), "
-				+ "ON DELETE CASCADE"
+				+ "DESCRIPTION" + " VARCHAR(511)"
 				+ ");";
 		String ARTICLES_table = "CREATE TABLE ARTICLES ("
 				+ "_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ "RSS_FEED_ID" + " INT, "
 				+ "TITLE" + " VARCHAR(127), "
-				+ "PUBDATE" + "CHAR(8), "
-				+ "DATA" + "BLOB, "
-				+ "FOREIGN KEY (RSS_FEED_ID) REFERENCES RSS_FEED(_ID)"
+				+ "PUBDATE" + " CHAR(8), "
+				+ "DATA" + " BLOB, "
+				+ "FOREIGN KEY (RSS_FEED_ID) REFERENCES RSS_FEED(_ID) ON DELETE CASCADE"
 				+ ");";
 
 		// Execute the SQL to create tables

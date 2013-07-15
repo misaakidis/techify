@@ -8,12 +8,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 public class ActivityUtils {
+	
+	// Utilities for interacting with the UI and the device
 
 	private static Activity activity;
 	private static Context context;
 	public static AlertDialog alert;
 
-	//Call this method after changing activity on onResume
+	// Call this method after changing activity on onResume
 	public static void initialize(Activity MainActivity)
 	{
 		ActivityUtils.activity = MainActivity;
@@ -21,7 +23,7 @@ public class ActivityUtils {
 		DBtools.doConnect(ActivityUtils.context);
 	}
 	
-	//Show an alert dialog with the message given
+	// Show an alert dialog with the message given
 	public static void showMessageOK(String message) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setMessage(message)
@@ -36,7 +38,7 @@ public class ActivityUtils {
 		alert.show();
 	}
 	
-	//Checks if the device is connected to the Internet
+	// Checks if the device is connected to the Internet
 	public static boolean isNetworkAvailable() 
 	{
 		ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);

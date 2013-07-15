@@ -15,10 +15,18 @@ class DBconn extends SQLiteOpenHelper {
 		super(context, DB_NAME, null, DB_VERSION);
 	}
 
+	/*
+	 * Called when the database is created for the first time.
+	 * This is where the creation of tables and the initial population of 
+	 * the tables should happen.(non-Javadoc)
+	 * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
+	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		// Debug log that this is the first execution of the program and we create a new DB
 		Log.d("DB", "Creating new Database");
 
+		// SQL to initialize the DB schema
 		String RSS_FEED_table = "CREATE TABLE RSS_FEED ("
 				+ "_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ "TITLE" + " VARCHAR(127), "
@@ -35,6 +43,7 @@ class DBconn extends SQLiteOpenHelper {
 				+ "FOREIGN KEY (RSS_FEED_ID) REFERENCES RSS_FEED(_ID)"
 				+ ");";
 
+		// Execute the SQL to create tables
 		try{
 			db.execSQL(RSS_FEED_table);
 			db.execSQL(ARTICLES_table);

@@ -7,6 +7,8 @@ import java.util.Date;
 
 public class Article {
 	
+	// Articles POJO, with setters and getters
+	
 	private int _id;
 	private int rss_feed_id;
 	private String title;

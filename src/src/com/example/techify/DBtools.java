@@ -1,5 +1,7 @@
 package com.example.techify;
 
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -44,5 +46,12 @@ class DBtools {
 		values.put("PUBDATE", article.getPubdateStr());
 		values.put("DATA", article.getData());
 		return db.insert("ARTICLES", null, values);
+	}
+	
+	// Retrieve newest articles
+	public static ArrayList<Article> getNewestArticles()
+	{
+		
+		return null;
 	}
 }

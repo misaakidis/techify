@@ -17,6 +17,8 @@ package com.example.techify;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
+
 import com.example.techify.ActivityUtils;
 
 public class MainActivity extends Activity {
@@ -33,12 +35,14 @@ public class MainActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 		//Initialize utility class with methods for interacting with GUI
-		ActivityUtils.initialize(this);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		ActivityUtils.initialize(this);
+		Intent i = new Intent(this, ReadArticle.class);
+		startActivity(i);
 	}
 
 	/*

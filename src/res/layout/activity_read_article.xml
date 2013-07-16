@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ReadArticle" >
+    tools:context=".ReadArticleOnline" >
 
     <WebView
         android:id="@+id/webViewArticle"

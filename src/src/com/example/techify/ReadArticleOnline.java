@@ -1,14 +1,16 @@
 package com.example.techify;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.jsoup.nodes.Document;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.MenuItem;
+import android.webkit.WebView;
 import android.support.v4.app.NavUtils;
 
-public class ReadArticle extends Activity {
+public class ReadArticleOnline extends Activity {
+	
+	Document doc = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +18,20 @@ public class ReadArticle extends Activity {
 		setContentView(R.layout.activity_read_article);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		ActivityUtils.initialize(this);
+
+		try {
+			doc = ActivityUtils.asyncGetWebPageDoc("http://fulltextrssfeed.com/feeds.reuters.com/reuters/technologyNews");
+		} catch (Exception e) {
+			cancel();
+		}
+	}
+	
+	void cancel() {
+		ActivityUtils.showMessageOK("Can not show the link requested.");
+		ActivityUtils.hideEverything();
+		finish();
 	}
 
 	/**
@@ -57,13 +73,13 @@ public class ReadArticle extends Activity {
 	protected void onResume() {
 		super.onResume();
 		ActivityUtils.initialize(this);
-		URL url = null;
-		try {
-			url = new URL("http://www.google.gr");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ActivityUtils.getWebPage(url);
+		if(doc == null)
+			cancel();
+		WebView webViewArticle = (WebView)findViewById(R.id.webViewArticle);
+		webViewArticle.setFocusableInTouchMode(false);
+		webViewArticle.setFocusable(false);
+		webViewArticle.getSettings().setBuiltInZoomControls(true);
+		webViewArticle.getSettings().setDisplayZoomControls(true);
+		webViewArticle.loadData(doc.html(), "text/html", "null");
 	}
 }

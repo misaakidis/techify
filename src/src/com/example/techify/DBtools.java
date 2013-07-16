@@ -13,8 +13,7 @@ class DBtools {
 	private static DBconn dbconn;
 	private static SQLiteDatabase db;
 
-	public static void doConnect(Context context)
-	{
+	public static void doConnect(Context context) {
 		//Initialize the dbconn and db instances -- connect to the DB
 		dbconn = new DBconn(context);
 		try {
@@ -24,22 +23,23 @@ class DBtools {
 			ActivityUtils.showMessageOK("Could not connect to the database.\n" + e.getMessage());
 		}
 	}
+	
+	public static void doClose() {
+		db.close();
+	}
 
 	// Insert one or multiple rows
-	public static long insert(String table, String nullColumnHack, ContentValues values)
-	{
+	public static long insert(String table, String nullColumnHack, ContentValues values) {
 		return db.insert(table, nullColumnHack, values);	
 	}
 	
 	// Delete one or multiple rows
-	public static int delete(String table, String whereClause, String[] whereArgs)
-	{
+	public static int delete(String table, String whereClause, String[] whereArgs) {
 		return db.delete(table, whereClause, whereArgs);
 	}
 	
 	// Insert an article in the DB
-	public static long insertArticle(Article article)
-	{
+	public static long insertArticle(Article article) {
 		ContentValues values = new ContentValues();
 		values.put("RSS_FEED_ID", article.getRss_feed_id());
 		values.put("TITLE",article.getTitle());
@@ -49,8 +49,7 @@ class DBtools {
 	}
 	
 	// Retrieve newest articles
-	public static ArrayList<Article> getNewestArticles()
-	{
+	public static ArrayList<Article> getNewestArticles() {
 		
 		return null;
 	}

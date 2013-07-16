@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.techify.ReadArticle"
+            android:name="com.example.techify.ReadArticleOnline"
             android:label="@string/title_activity_read_article"
             android:parentActivityName="com.example.techify.MainActivity" >
             <meta-data

@@ -15,8 +15,7 @@ public class Article {
 	private Date pubdate;
 	private byte[] data;
 
-	public int get_id()
-	{
+	public int get_id() {
 		return _id;
 	}
 

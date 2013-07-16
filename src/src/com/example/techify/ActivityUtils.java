@@ -1,7 +1,9 @@
 package com.example.techify;
 
-import java.net.URL;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import android.app.Activity;
@@ -25,12 +27,9 @@ public class ActivityUtils {
 	private static ProgressDialog progDialog;
 
 	// Call this method after changing activity on onResume
-	public static void initialize(Activity MainActivity)
-	{
+	public static void initialize(Activity MainActivity) {
 		ActivityUtils.activity = MainActivity;
-		ActivityUtils.context = MainActivity.getApplicationContext();
-		//context.deleteDatabase("techify.sqlite3");
-		DBtools.doConnect(ActivityUtils.context);
+		ActivityUtils.context = MainActivity.getApplicationContext();		
 	}
 
 	// Show an alert dialog with the message given
@@ -49,94 +48,98 @@ public class ActivityUtils {
 	}
 
 	// Show a toast message for a short time
-	public static void showToastShort(String message)
-	{
+	public static void showToastShort(String message) {
 		Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
 		toast.show();
 	}
 
 	// Show a toast message for a long time
-	public static void showToastLong(String message)
-	{
+	public static void showToastLong(String message) {
 		Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
 		toast.show();
 	}
 
 	// Show a progress dialog, use hideProgressDialog to dismiss it
-	public static void showProgressDialog(String message)
-	{
+	public static void showProgressDialog(String message) {
 		progDialog = ProgressDialog.show(activity, "", message);
 		progDialog.setCancelable(false);
 	}
 
 	// Show a progress dialog, use hideProgressDialog to dismiss it
-	public static void showCancelableProgressDialog(String message, OnCancelListener onCancelListener)
-	{
+	public static void showCancelableProgressDialog(String message, OnCancelListener onCancelListener) {
 		progDialog = ProgressDialog.show(activity, "", message);
 		progDialog.setCancelable(true);
 		progDialog.setOnCancelListener(onCancelListener);
 	}
 
-	public static void hideProgressDialog()
-	{
+	public static void hideProgressDialog() {
 		if(progDialog != null)
 			progDialog.dismiss();
 		progDialog = null;
 	}
 
-	public static void hideAlert()
-	{
+	public static void hideAlert() {
 		if(alert != null)
 			alert.dismiss();
 		alert = null;
 	}
 
-	public static void hideEverything()
-	{
+	public static void hideEverything() {
 		hideProgressDialog();
 
 	}
 
 
 	// Checks if the device is connected to the Internet
-	public static boolean isNetworkAvailable() 
-	{
+	public static boolean isNetworkAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null;
 	}
 
-	// Download a web page
-	public static Document getWebPage(URL url) {
-		Document doc;
-		AsyncGetWebPage getWebPage = new AsyncGetWebPage(url);
-		getWebPage.execute();
-		return null;
+	// Asynchronously download a web page
+	public static Document asyncGetWebPageDoc(String url) throws InterruptedException, ExecutionException {
+		Document doc = null;
+		AsyncGetArticle getWebPage = new AsyncGetArticle(url);
+		doc = getWebPage.execute().get();
+		return doc;
 	}
 
 	// Inner class extending AsyncTask for requesting web pages and showing dialogs on a different thread
-	private static class AsyncGetWebPage extends AsyncTask<Void, Void, Document>
-	{
-		private URL url;
-		
-		public AsyncGetWebPage(URL url) {
+	private static class AsyncGetArticle extends AsyncTask<Void, Void, Document> {
+		private String url;
+		private Document doc;
+
+		public AsyncGetArticle(String url) {
 			this.url = url;
 		}
 
 		@Override
-		protected void onPreExecute()
-		{
-			ActivityUtils.showProgressDialog("Downloading requested article");
-		}
-		
-		@Override
-		protected Document doInBackground(Void... params) {
-			return null;
+		protected void onPreExecute() {
+			new OnCancelListener(){
+				@Override
+				public void onCancel(DialogInterface arg0) 
+				{
+					cancel(false);
+					onPostExecute(null);
+				}
+			};
+			ActivityUtils.showCancelableProgressDialog("Downloading requested article", null);
 		}
 
 		@Override
-		protected void onPostExecute(Document doc)
-		{
+		protected Document doInBackground(Void... params) {
+			try {
+				doc = Jsoup.connect(url).get();
+			} catch (IOException e) {
+				cancel(false);
+				onPostExecute(null);
+			}
+			return doc;
+		}
+
+		@Override
+		protected void onPostExecute(Document doc) {
 			super.onPostExecute(doc);
 			ActivityUtils.hideProgressDialog();
 		}

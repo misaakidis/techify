@@ -34,15 +34,27 @@ public class MainActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		//Initialize utility class with methods for interacting with GUI
+		// Connect to the database
+		DBtools.doConnect(this.getApplicationContext());
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		ActivityUtils.initialize(this);
-		Intent i = new Intent(this, ReadArticle.class);
+		// Initialize utility class with methods for interacting with GUI
+		try {
+			ActivityUtils.initialize(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Intent i = new Intent(this, ReadArticleOnline.class);
 		startActivity(i);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		DBtools.doClose();
 	}
 
 	/*

@@ -24,14 +24,8 @@ public class ReadArticleOnline extends Activity {
 		try {
 			doc = ActivityUtils.asyncGetWebPageDoc("http://fulltextrssfeed.com/feeds.reuters.com/reuters/technologyNews");
 		} catch (Exception e) {
-			cancel();
+			e.printStackTrace();
 		}
-	}
-	
-	void cancel() {
-		ActivityUtils.showMessageOK("Can not show the link requested.");
-		ActivityUtils.hideEverything();
-		finish();
 	}
 
 	/**
@@ -74,7 +68,10 @@ public class ReadArticleOnline extends Activity {
 		super.onResume();
 		ActivityUtils.initialize(this);
 		if(doc == null)
-			cancel();
+		{
+			ActivityUtils.showMessageOKFinish("Cannot load the link requested.");
+			return;
+		}
 		WebView webViewArticle = (WebView)findViewById(R.id.webViewArticle);
 		webViewArticle.setFocusableInTouchMode(false);
 		webViewArticle.setFocusable(false);

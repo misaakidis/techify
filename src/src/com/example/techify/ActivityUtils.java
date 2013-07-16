@@ -1,6 +1,5 @@
 package com.example.techify;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import org.jsoup.Jsoup;
@@ -12,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -44,6 +44,28 @@ public class ActivityUtils {
 			}
 		});
 		alert = builder.create();
+		alert.show();
+	}
+	
+	// Show an alert dialog with the message given
+	public static void showMessageOKFinish(String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		builder.setMessage(message)
+		.setCancelable(false)
+		.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) 
+			{
+				alert.cancel();
+			}
+		});
+		alert = builder.create();
+		alert.setOnDismissListener(new OnDismissListener()
+		{
+		    public void onDismiss(DialogInterface dialog)
+		    {
+		        activity.finish();
+		    }
+		});
 		alert.show();
 	}
 
@@ -131,7 +153,7 @@ public class ActivityUtils {
 		protected Document doInBackground(Void... params) {
 			try {
 				doc = Jsoup.connect(url).get();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				cancel(false);
 				onPostExecute(null);
 			}

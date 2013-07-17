@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 class DBtools {
@@ -50,7 +51,27 @@ class DBtools {
 	
 	// Retrieve newest articles
 	public static ArrayList<Article> getNewestArticles() {
-		
-		return null;
+	    ArrayList<Article> list = new ArrayList<Article>();
+	    Cursor cursor = db.query("ARTICLES", null, null, null, null, null, "PUBDATE");
+	    if (cursor.moveToFirst())
+	    {
+	    	Article article = new Article();
+	        do
+	        {
+	        	article.set_id(cursor.getInt(0));
+	        	article.setRss_feed_id(cursor.getInt(1));
+	        	article.setTitle(cursor.getString(2));
+	        	article.setPubdateStr(cursor.getString(3));
+	        	article.setData(cursor.getBlob(4));
+	            list.add(article);
+	        }
+	        while (cursor.moveToNext());
+	    }
+	    if (cursor != null && !cursor.isClosed()) 
+	    {
+	        cursor.close();
+	    }
+
+	    return list;
 	}
 }

@@ -1,5 +1,6 @@
 package com.example.techify;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -50,6 +51,15 @@ public class Article {
 	public void setPubdate(Date pubdate) {
 		this.pubdate = pubdate;
 	}
+	
+	public void setPubdateStr(String pubdate) {
+		try {
+			this.pubdate = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US).parse(pubdate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public byte[] getData() {
 		return this.data.clone();
@@ -58,23 +68,10 @@ public class Article {
 	public void setData(byte[] data) {
 		this.data = data.clone();
 	}
-
-
-	/*
-	 * Debug Code to insert test article in DB
-	 * 
-	Article test = new Article();
-	test.setRss_feed_id(1);
-	test.setPubdate(new Date());
-	test.setTitle("Test Article");
-	try {
-		test.setData("This is a simple article".getBytes("UTF-8"));
-	} catch (UnsupportedEncodingException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+	
+	@Override
+	public String toString() {
+		return "Article " + get_id();
 	}
-
-	DBtools.insertArticle(test);
-	 */
 
 }

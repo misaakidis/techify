@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.jsoup.nodes.Document;
+
 
 public class Article {
 
@@ -14,7 +16,7 @@ public class Article {
 	private int rss_feed_id;
 	private String title;
 	private Date pubdate;
-	private byte[] data;
+	private Document doc;
 
 	public int get_id() {
 		return _id;
@@ -51,7 +53,7 @@ public class Article {
 	public void setPubdate(Date pubdate) {
 		this.pubdate = pubdate;
 	}
-	
+
 	public void setPubdateStr(String pubdate) {
 		try {
 			this.pubdate = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US).parse(pubdate);
@@ -61,17 +63,25 @@ public class Article {
 		}
 	}
 
-	public byte[] getData() {
-		return this.data.clone();
+	public Document getDoc() {
+		return doc;
 	}
 
-	public void setData(byte[] data) {
-		this.data = data.clone();
+	public void setDoc(Document doc) {
+		this.doc = doc;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Article " + get_id();
+		return getTitle();
+	}
+
+	public byte[] getDocBytes() {
+		return new DocumentParcelable(doc).getBytes();
+	}
+
+	public void setDocBytes(byte[] blob) {
+		//doc = new DocumentParcelable(blob).getDoc();
 	}
 
 }

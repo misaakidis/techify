@@ -15,9 +15,9 @@
 
 package com.example.techify;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -52,9 +52,10 @@ public class MainActivity extends Activity {
 		ActivityUtils.initialize(this);
 		//Intent i = new Intent(this, ReadArticleOnline.class);
 		//startActivity(i);
+		articleslist = null;
 		showArticles();
 	}
-	
+
 	private void showArticles() {
 		/*
 		 * Debug Code to insert test article in DB
@@ -63,17 +64,19 @@ public class MainActivity extends Activity {
 		Article test = new Article();
 		test.setRss_feed_id(1);
 		test.setPubdate(new Date());
-		test.setTitle("Test Article");
+		test.setTitle("Downloads");
 		try {
-			test.setData("This is a simple article".getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
+			test.setDoc(ActivityUtils.asyncGetWebPageDoc("http://www.reuters.com/article/2013/07/17/net-us-nec-smartphones-idUSBRE96F11K20130717?feedType=RSS&feedName=technologyNews"));
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		DBtools.insertArticle(test);
-		articleslist = DBtools.getNewestArticles();
-		if(articleslist.isEmpty()) {
+		articleslist = ActivityUtils.getNewestArticlesDialog();
+		if(articleslist == null || articleslist.isEmpty()) {
 			ActivityUtils.showMessageOK("There are no articles");
 			return;
 		}
@@ -81,7 +84,7 @@ public class MainActivity extends Activity {
 		articlesadapter = new ArrayAdapter<Article>(this, android.R.layout.simple_list_item_1, articleslist);
 		listview.setAdapter(articlesadapter);
 	}
-	
+
 	@Override
 	public void onStop() {
 		super.onStop();

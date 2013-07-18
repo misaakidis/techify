@@ -1,5 +1,6 @@
 package com.example.techify;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import org.jsoup.Jsoup;
@@ -46,7 +47,7 @@ public class ActivityUtils {
 		alert = builder.create();
 		alert.show();
 	}
-	
+
 	// Show an alert dialog with the message given
 	public static void showMessageOKFinish(String message) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -61,10 +62,10 @@ public class ActivityUtils {
 		alert = builder.create();
 		alert.setOnDismissListener(new OnDismissListener()
 		{
-		    public void onDismiss(DialogInterface dialog)
-		    {
-		        activity.finish();
-		    }
+			public void onDismiss(DialogInterface dialog)
+			{
+				activity.finish();
+			}
 		});
 		alert.show();
 	}
@@ -121,16 +122,18 @@ public class ActivityUtils {
 
 	// Asynchronously download a web page
 	public static Document asyncGetWebPageDoc(String url) throws InterruptedException, ExecutionException {
-		Document doc = null;
 		AsyncGetArticle getWebPage = new AsyncGetArticle(url);
-		doc = getWebPage.execute().get();
-		return doc;
+		return getWebPage.execute().get();
+	}
+
+	// Asynchronously download a web page
+	public static byte[] asyncGetWebPageBytes(String url) throws InterruptedException, ExecutionException {
+		return new DocumentParcelable(asyncGetWebPageDoc(url)).getBytes();
 	}
 
 	// Inner class extending AsyncTask for requesting web pages and showing dialogs on a different thread
 	private static class AsyncGetArticle extends AsyncTask<Void, Void, Document> {
 		private String url;
-		private Document doc;
 
 		public AsyncGetArticle(String url) {
 			this.url = url;
@@ -151,8 +154,9 @@ public class ActivityUtils {
 
 		@Override
 		protected Document doInBackground(Void... params) {
+			Document doc = null;
 			try {
-				doc = Jsoup.connect(url).get();
+				doc = Jsoup.connect(url).maxBodySize(0).get();
 			} catch (Exception e) {
 				cancel(false);
 				onPostExecute(null);
@@ -167,4 +171,44 @@ public class ActivityUtils {
 		}
 
 	}
+
+	public static ArrayList<Article> getNewestArticlesDialog() {
+		AsyncGetDownloadedArticles getDownloadedArticles = new AsyncGetDownloadedArticles();
+		try {
+			return getDownloadedArticles.execute().get();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	// Inner class extending AsyncTask for retrieving the downloaded articles from DB
+	private static class AsyncGetDownloadedArticles extends AsyncTask<Void, Void, ArrayList<Article>>{
+
+		@Override
+		protected void onPreExecute() {
+			new OnCancelListener(){
+				@Override
+				public void onCancel(DialogInterface arg0) 
+				{
+					cancel(false);
+					onPostExecute(null);
+				}
+			};
+			ActivityUtils.showCancelableProgressDialog("Retrieving Downloaded Articles...", null);
+		}
+
+		@Override
+		protected ArrayList<Article> doInBackground(Void... params) {
+			ArrayList<Article> articleslist = DBtools.getNewestArticles();
+			return articleslist;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<Article> articleslist) {
+			super.onPostExecute(articleslist);
+			ActivityUtils.hideProgressDialog();
+		}
+
+	}
+
 }

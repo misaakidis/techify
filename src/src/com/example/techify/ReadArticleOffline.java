@@ -1,31 +1,19 @@
 package com.example.techify;
 
-import org.jsoup.nodes.Document;
-
 import android.os.Bundle;
 import android.app.Activity;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebView;
 import android.support.v4.app.NavUtils;
 
-public class ReadArticleOnline extends Activity {
-	
-	Document doc = null;
+public class ReadArticleOffline extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_read_article_online);
+		setContentView(R.layout.activity_read_article_offline);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
-		ActivityUtils.initialize(this);
-
-		try {
-			doc = ActivityUtils.asyncGetWebPageDoc("http://fulltextrssfeed.com/feeds.reuters.com/reuters/technologyNews");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -37,14 +25,12 @@ public class ReadArticleOnline extends Activity {
 
 	}
 
-	/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.read_article, menu);
+		getMenuInflater().inflate(R.menu.read_article_offline, menu);
 		return true;
 	}
-	 */
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -63,20 +49,4 @@ public class ReadArticleOnline extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		ActivityUtils.initialize(this);
-		if(doc == null)
-		{
-			ActivityUtils.showMessageOKFinish("Cannot load the link requested.");
-			return;
-		}
-		WebView webViewArticle = (WebView)findViewById(R.id.webViewArticle);
-		webViewArticle.setFocusableInTouchMode(false);
-		webViewArticle.setFocusable(false);
-		webViewArticle.getSettings().setBuiltInZoomControls(true);
-		webViewArticle.getSettings().setDisplayZoomControls(true);
-		webViewArticle.loadData(doc.html(), "text/html", "null");
-	}
 }

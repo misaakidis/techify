@@ -45,7 +45,7 @@ class DBtools {
 		values.put("RSS_FEED_ID", article.getRss_feed_id());
 		values.put("TITLE",article.getTitle());
 		values.put("PUBDATE", article.getPubdateStr());
-		values.put("DATA", article.getData());
+		values.put("DATA", article.getDocBytes());
 		return db.insert("ARTICLES", null, values);
 	}
 	
@@ -55,14 +55,15 @@ class DBtools {
 	    Cursor cursor = db.query("ARTICLES", null, null, null, null, null, "PUBDATE");
 	    if (cursor.moveToFirst())
 	    {
-	    	Article article = new Article();
+	    	Article article;
 	        do
 	        {
+	        	article = new Article();
 	        	article.set_id(cursor.getInt(0));
 	        	article.setRss_feed_id(cursor.getInt(1));
 	        	article.setTitle(cursor.getString(2));
 	        	article.setPubdateStr(cursor.getString(3));
-	        	article.setData(cursor.getBlob(4));
+				article.setDocBytes(cursor.getBlob(4));
 	            list.add(article);
 	        }
 	        while (cursor.moveToNext());

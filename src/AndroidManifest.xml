@@ -34,6 +34,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.techify.MainActivity" />
         </activity>
+        <activity
+            android:name="com.example.techify.ReadArticleOffline"
+            android:label="@string/title_activity_read_article_offline"
+            android:parentActivityName="com.example.techify.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.techify.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
